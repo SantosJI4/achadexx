@@ -54,7 +54,7 @@ function criarCardProduto(produto) {
 
 // Função para buscar e exibir produtos (Home)
 function carregarProdutos() {
-  fetch('http://localhost:5000/produtos')
+  fetch('/produtos')
     .then(res => res.json())
     .then(produtos => {
       const container = document.querySelector('.container');
@@ -88,7 +88,7 @@ if (productForm) {
       loja: document.getElementById('loja').value
     };
 
-    fetch('http://localhost:5000/produtos', {
+    fetch('/produtos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(produto)
