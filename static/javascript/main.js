@@ -55,13 +55,19 @@ function carregarProdutos() {
   fetch('/produtos')
     .then(res => res.json())
     .then(produtos => {
+      console.log('Produtos recebidos do backend:', produtos); // <-- Adicione esta linha
       const container = document.querySelector('.container');
       if (!container) return;
+      if (!Array.isArray(produtos) || produtos.length === 0) {
+        container.innerHTML = '<p style="color:#888;text-align:center;">Nenhum produto cadastrado.</p>';
+        return;
+      }
       container.innerHTML = produtos.map(criarCardProduto).join('');
     })
-    .catch(() => {
+    .catch((err) => {
       const container = document.querySelector('.container');
       if (container) container.innerHTML = '<p style="color:#888;text-align:center;">Não foi possível carregar os produtos.</p>';
+      console.error('Erro ao buscar produtos:', err); // <-- Adicione esta linha
     });
 }
 

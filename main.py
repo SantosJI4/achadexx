@@ -10,13 +10,26 @@ DATA_FILE = os.path.join(os.path.dirname(__file__), 'produtos.json')
 
 def load_produtos():
     if not os.path.exists(DATA_FILE):
+        print("Arquivo produtos.json não existe, criando novo.")
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump([], f)
         return []
-    with open(DATA_FILE, 'r', encoding='utf-8') as f:
-        return json.load(f)
+    try:
+        with open(DATA_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print("Erro ao ler produtos.json:", e)
+        # Corrige arquivo corrompido
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump([], f)
+        return []
 
 def save_produtos(produtos):
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(produtos, f, ensure_ascii=False, indent=2)
+    try:
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(produtos, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Erro ao salvar produtos.json:", e)
 
 @app.route('/')
 def home():
@@ -29,6 +42,7 @@ def criador():
 @app.route('/produtos', methods=['GET'])
 def listar_produtos():
     produtos = load_produtos()
+    print("Produtos enviados para o frontend:", produtos)
     return jsonify(produtos)
 
 @app.route('/produtos', methods=['POST'])
@@ -37,6 +51,7 @@ def cadastrar_produto():
     produtos = load_produtos()
     produtos.append(produto)
     save_produtos(produtos)
+    print("Produto cadastrado:", produto)
     return jsonify({'status': 'ok', 'produto': produto}), 201
 
 # Para servir arquivos estáticos (JS, CSS, imagens)
