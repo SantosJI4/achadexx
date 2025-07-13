@@ -20,12 +20,10 @@ if (menuToggle && nav) {
 
 // Função para gerar o HTML de cada produto
 function criarCardProduto(produto) {
-  // Ícones das lojas
   const icones = {
-    shopee: 'https://static.vecteezy.com/system/resources/previews/024/555/081/original/shopee-logo-transparent-free-png.png',
-    mercadolivre: 'https://vectorseek.com/wp-content/uploads/2023/08/Mercado-Livre-Icon-Logo-Vector.svg-.png',
+    shopee: 'https://cdn.icon-icons.com/icons2/2429/PNG/512/shopee_logo_icon_147252.png',
+    mercadolivre: 'https://cdn.icon-icons.com/icons2/2699/PNG/512/mercado_livre_logo_icon_170561.png',
     americanas: 'https://logodownload.org/wp-content/uploads/2020/11/lojas-americanas-logo-0.png'
-    // Adicione mais se quiser
   };
   const iconeLoja = icones[produto.loja?.toLowerCase()] || '';
 
@@ -67,9 +65,6 @@ function carregarProdutos() {
     });
 }
 
-window.addEventListener('DOMContentLoaded', carregarProdutos);
-
-// Chama ao carregar a página (Home)
 window.addEventListener('DOMContentLoaded', carregarProdutos);
 
 // Integração do formulário de cadastro de produto (criador.html)
