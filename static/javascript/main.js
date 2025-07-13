@@ -24,7 +24,7 @@ function criarCardProduto(produto) {
   const icones = {
     shopee: 'https://static.vecteezy.com/system/resources/previews/024/555/081/original/shopee-logo-transparent-free-png.png',
     mercadolivre: 'https://vectorseek.com/wp-content/uploads/2023/08/Mercado-Livre-Icon-Logo-Vector.svg-.png',
-    americanas: 'https://logodownload.org/wp-content/uploads/2014/05/americanas-logo-0.png'
+    americanas: 'https://logodownload.org/wp-content/uploads/2020/11/lojas-americanas-logo-0.png'
     // Adicione mais se quiser
   };
   const iconeLoja = icones[produto.loja?.toLowerCase()] || '';
