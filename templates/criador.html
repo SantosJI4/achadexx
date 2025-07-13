@@ -56,56 +56,6 @@
       <button type="submit">Cadastrar Produto</button>
     </form>
   </div>
-  <script>
-    // No main.js
-const productForm = document.getElementById('product-form');
-if (productForm) {
-  productForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const produto = {
-      id: document.getElementById('id').value,
-      nome: document.getElementById('nome').value,
-      foto: document.getElementById('foto').value,
-      link: document.getElementById('link').value,
-      precoAntigo: document.getElementById('preco-antigo').value,
-      precoNovo: document.getElementById('preco-novo').value,
-      desconto: document.getElementById('desconto').value,
-      cupom: document.getElementById('cupom').value,
-      loja: document.getElementById('loja').value
-    };
-
-    fetch('/produtos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(produto)
-    })
-    .then(res => res.json())
-    .then(data => {
-      alert('Produto cadastrado com sucesso!');
-      productForm.reset();
-      const preview = document.getElementById('preview');
-      if (preview) preview.style.display = 'none';
-    })
-    .catch(() => {
-      alert('Erro ao cadastrar produto!');
-    });
-  });
-
-  // Preview da imagem ao colar a URL
-  const fotoInput = document.getElementById('foto');
-  const preview = document.getElementById('preview');
-  if (fotoInput && preview) {
-    fotoInput.addEventListener('input', function() {
-      if (fotoInput.value) {
-        preview.src = fotoInput.value;
-        preview.style.display = 'block';
-      } else {
-        preview.style.display = 'none';
-      }
-    });
-  }
-}
-  </script>
+  <script src="/static/javascript/main.js"></script>
 </body>
 </html>

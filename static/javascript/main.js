@@ -55,7 +55,7 @@ function carregarProdutos() {
   fetch('/produtos')
     .then(res => res.json())
     .then(produtos => {
-      console.log('Produtos recebidos do backend:', produtos); // <-- Adicione esta linha
+      console.log('Produtos recebidos do backend:', produtos);
       const container = document.querySelector('.container');
       if (!container) return;
       if (!Array.isArray(produtos) || produtos.length === 0) {
@@ -67,7 +67,7 @@ function carregarProdutos() {
     .catch((err) => {
       const container = document.querySelector('.container');
       if (container) container.innerHTML = '<p style="color:#888;text-align:center;">Não foi possível carregar os produtos.</p>';
-      console.error('Erro ao buscar produtos:', err); // <-- Adicione esta linha
+      console.error('Erro ao buscar produtos:', err);
     });
 }
 
@@ -80,7 +80,7 @@ if (productForm) {
     e.preventDefault();
 
     const produto = {
-      id: document.getElementById('id').value,
+      id: document.getElementById('id') ? document.getElementById('id').value : '',
       nome: document.getElementById('nome').value,
       foto: document.getElementById('foto').value,
       link: document.getElementById('link').value,
