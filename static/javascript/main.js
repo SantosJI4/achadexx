@@ -67,6 +67,8 @@ function carregarProdutos() {
     });
 }
 
+window.addEventListener('DOMContentLoaded', carregarProdutos);
+
 // Chama ao carregar a página (Home)
 window.addEventListener('DOMContentLoaded', carregarProdutos);
 
