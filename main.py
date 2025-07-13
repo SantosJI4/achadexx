@@ -1,36 +1,74 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
-import json
+import sqlite3
 import os
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app)
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), 'produtos.json')
+# --- Inicialização do banco SQLite ---
+def init_db():
+    conn = sqlite3.connect('produtos.db')
+    c = conn.cursor()
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT,
+            foto TEXT,
+            link TEXT,
+            precoAntigo TEXT,
+            precoNovo TEXT,
+            desconto TEXT,
+            cupom TEXT,
+            loja TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
-def load_produtos():
-    if not os.path.exists(DATA_FILE):
-        print("Arquivo produtos.json não existe, criando novo.")
-        with open(DATA_FILE, 'w', encoding='utf-8') as f:
-            json.dump([], f)
-        return []
-    try:
-        with open(DATA_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception as e:
-        print("Erro ao ler produtos.json:", e)
-        # Corrige arquivo corrompido
-        with open(DATA_FILE, 'w', encoding='utf-8') as f:
-            json.dump([], f)
-        return []
+init_db()
 
-def save_produtos(produtos):
-    try:
-        with open(DATA_FILE, 'w', encoding='utf-8') as f:
-            json.dump(produtos, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print("Erro ao salvar produtos.json:", e)
+# --- Funções CRUD SQLite ---
+def get_produtos():
+    conn = sqlite3.connect('produtos.db')
+    c = conn.cursor()
+    c.execute('SELECT nome, foto, link, precoAntigo, precoNovo, desconto, cupom, loja FROM produtos')
+    produtos = [
+        {
+            'nome': row[0],
+            'foto': row[1],
+            'link': row[2],
+            'precoAntigo': row[3],
+            'precoNovo': row[4],
+            'desconto': row[5],
+            'cupom': row[6],
+            'loja': row[7]
+        }
+        for row in c.fetchall()
+    ]
+    conn.close()
+    return produtos
 
+def add_produto(produto):
+    conn = sqlite3.connect('produtos.db')
+    c = conn.cursor()
+    c.execute('''
+        INSERT INTO produtos (nome, foto, link, precoAntigo, precoNovo, desconto, cupom, loja)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        produto.get('nome'),
+        produto.get('foto'),
+        produto.get('link'),
+        produto.get('precoAntigo'),
+        produto.get('precoNovo'),
+        produto.get('desconto'),
+        produto.get('cupom'),
+        produto.get('loja')
+    ))
+    conn.commit()
+    conn.close()
+
+# --- Rotas Flask ---
 @app.route('/')
 def home():
     return render_template('Home.html')
@@ -41,16 +79,14 @@ def criador():
 
 @app.route('/produtos', methods=['GET'])
 def listar_produtos():
-    produtos = load_produtos()
+    produtos = get_produtos()
     print("Produtos enviados para o frontend:", produtos)
     return jsonify(produtos)
 
 @app.route('/produtos', methods=['POST'])
 def cadastrar_produto():
     produto = request.json
-    produtos = load_produtos()
-    produtos.append(produto)
-    save_produtos(produtos)
+    add_produto(produto)
     print("Produto cadastrado:", produto)
     return jsonify({'status': 'ok', 'produto': produto}), 201
 
