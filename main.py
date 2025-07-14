@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
 import os
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__, static_folder='.', template_folder='.')
 CORS(app)
 
 # --- Inicialização do banco SQLite ---
@@ -71,11 +71,11 @@ def add_produto(produto):
 # --- Rotas Flask ---
 @app.route('/')
 def home():
-    return render_template('Home.html')
+    return send_from_directory('.', 'Home.html')
 
 @app.route('/criador')
 def criador():
-    return render_template('criador.html')
+    return send_from_directory('.', 'criador.html')
 
 @app.route('/produtos', methods=['GET'])
 def listar_produtos():
@@ -90,10 +90,10 @@ def cadastrar_produto():
     print("Produto cadastrado:", produto)
     return jsonify({'status': 'ok', 'produto': produto}), 201
 
-# Para servir arquivos estáticos (JS, CSS, imagens)
-@app.route('/static/<path:filename>')
+# Para servir qualquer arquivo estático na raiz (JS, CSS, imagens, etc)
+@app.route('/<path:filename>')
 def static_files(filename):
-    return send_from_directory(app.static_folder, filename)
+    return send_from_directory('.', filename)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
